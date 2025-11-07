@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'SUSE Mono';
+    src: url('SUSEMono-Thin.eot');
+    src: url('SUSEMono-Thin.eot?#iefix') format('embedded-opentype'),
+        url('SUSEMono-Thin.woff2') format('woff2'),
+        url('SUSEMono-Thin.woff') format('woff'),
+        url('SUSEMono-Thin.ttf') format('truetype'),
+        url('SUSEMono-Thin.svg#SUSEMono-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+

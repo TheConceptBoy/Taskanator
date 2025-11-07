@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskanator Setup</title>
+    <link rel="stylesheet" href="styles/setup.css">
+    <script src="scripts\jquery-3.7.1.min.js"></script>
+    <script src="scripts/setup.js"></script>
+
+    <script src="scripts/status_popups.js"></script>
+    <link rel="stylesheet" href="styles/status_popups.css">
+</head>
+<body>
+    <div class="top_text">Initial Setup for Taskanator</div>
+    <div class="page_content">
+        <h2>Establish Database:</h2>
+        
+        <div class="two_half">
+            <div class="stage_desc">
+                Provide the username and password for your database engine. Also provide the name of the database which will be created to store taskanator boards, users, notes and other data. <br><br>
+                This username and password should already exist in your database. This step will not create a new one.
+            </div>
+            <div class="create_db_stage" id="setup_form">
+                <div id="stage_db_status"></div>
+                <input id="db_user" type="username" placeholder="username">
+                <input id="db_password" type="password" placeholder="password">
+                <input id="db_database" type="text" placeholder="database to create">
+                <input type="button" value="Perform Initial Setup" onClick="run_setup(this)">
+            </div>
+        </div>
+
+        <h2>Register Master User:</h2> 
+        <div class="two_half">
+            <div class="stage_desc">
+                This is where you register the master account under which you will be creating your project boards, notes, and managing other users who have access to your boards. <br><br>
+                There can only be 1 master account. Once a master account is registered, all attempts to register another one will fail.
+            </div>
+            <form id="master_user_data" class="create_db_stage">
+                <div id="stage_user_status"></div>
+                <input id="master_username" disabled type="username" name="master_user_email" placeholder="master user email">
+                <input id="master_password"  disabled type="password" name="master_password" placeholder="master user password">
+                <input id="master_fname"  disabled type="text" name="master_fname" placeholder="master user first name">
+                <input id="master_lname"  disabled type="text" name="master_lname" placeholder="master user last name">
+                <input disabled type="button" value="Register Master User" onClick="register_master_user(this)">
+            </form>
+        </div>
+
+        <h2>Permitted IP Addresses:</h2> 
+        <div class="two_half">
+            <div class="stage_desc">
+                This is where you supply public IP filtering. Only requests originating from these IP addresses will be allowed to access the Taskanator Dashboard. <br><br> 
+                If you are hosting the planning to use this tool with team members, you need to acquire their public IP address (use What's my IP in google). <br><br>
+                Internet Service Providers tend to randomize once in a while. When that happens, the team member will lose their ability to access your instance of Taskanator. You will need to requires theire new ip and update it within the settings. <br><br>
+                If you're running Taskanator as a web application but locally and only for yourself, you only need the default ip address (192.168.0.1) <br><br>
+            </div>
+            
+            <div class="ip_manifesto">
+                <div id="stage_user_status"></div>
+
+                <div>Add New Permitted ip</div>
+                <div id="setup_new_ip_field">
+                    
+                    <input type="text" placeholder="name">
+                    <input type="text" placeholder="description">
+                    <div class="setup_ip_grid">
+                        <input type="number" value="192"> <span> . </span>
+                        <input type="number" value="168"> <span> . </span>
+                        <input type="number" value="0"> <span> . </span>
+                        <input type="number" value="1">
+                    </div>
+                    <input type="button" value="Add Ip Address" onclick="add_ip_to_list()">
+                </div>
+                
+                <div id="setup_ip_list">
+                    <div class="ip_listing">
+                        <span>localhost</span>
+                        <span>Description</span>
+                        <span>192.168.0.1</span>
+                        <input type="button" value="remove">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+        <br><br>
+        <div class="setup_complete" style="display:nones">
+            <h2>Setup Complete</h2>
+            
+            <div>Initial Setup Completed. You can proceed to the login page, where you can use your email and password to log into the dashboard. </div>
+            <br>
+            <button>Proceed to Login Page</button>
+        </div>
+    </div>
+    
+</body>
+</html>

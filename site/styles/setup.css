@@ -1,0 +1,94 @@
+
+body{
+    background-color: rgb(67, 67, 78);
+    max-width: 900px;
+    margin: auto;
+}
+
+.page_content{
+    padding: 10px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.top_text{
+    text-align: center;
+    padding: 20px;
+    color: white;
+    font-size: 40px;
+}
+
+.create_db_stage{
+    display: grid;
+    row-gap: 5px;
+}
+.create_db_stage input{
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.two_half{
+    display: grid;
+    grid-template-columns: 5fr 5fr;
+    column-gap: 10px;
+}
+
+.setup_complete{
+    max-width: 50%;
+    margin: auto;
+    text-align: center;
+    background-color: lightgreen;
+    padding: 5px 10px;
+    padding-bottom: 20px;
+    border-radius: 10px;
+}
+
+.setup_ip_grid{
+    display: grid;
+    grid-template-columns: 50px min-content 50px min-content 50px min-content 50px;
+}
+
+.setup_ip_grid span{
+    padding: 0px 5px;
+    font-weight: 600;
+}
+
+#setup_new_ip_field{
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 5px;
+    background-color: lightblue;
+    /* padding: 10px; */
+    border-radius: 10px;
+    column-gap: 5px;
+}
+
+#setup_ip_list{
+    display: grid;
+    row-gap: 5px;
+    background-color: rgb(120, 155, 167);
+    padding: 5px;
+    height: 400px;
+    overflow-y: scroll;
+    border-radius: 10px;
+}
+
+.ip_listing{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    row-gap: 5px;
+    background-color: lightblue;
+    padding: 5px 10px;
+    border-radius: 10px;
+    column-gap: 5px;
+    height: max-content;
+}
+
+.ip_manifesto{
+    display: grid;
+    row-gap: 5px;
+    background-color: lightblue;
+    padding: 10px;
+    border-radius: 10px;
+    column-gap: 5px;
+}

@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'SUSE Mono';
+    src: url('fonts/SUSEMono-Thin/SUSEMono-Thin.eot');
+    src: url('fonts/SUSEMono-Thin/SUSEMono-Thin.eot?#iefix') format('embedded-opentype'),
+        url('fonts/SUSEMono-Thin/SUSEMono-Thin.woff2') format('woff2'),
+        url('fonts/SUSEMono-Thin/SUSEMono-Thin.woff') format('woff'),
+        url('fonts/SUSEMono-Thin/SUSEMono-Thin.ttf') format('truetype'),
+        url('fonts/SUSEMono-Thin/SUSEMono-Thin.svg#SUSEMono-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Courgette';
+    src: url('fonts/Courgette-Regular/Courgette-Regular.eot');
+    src: url('fonts/Courgette-Regular/Courgette-Regular.eot?#iefix') format('embedded-opentype'),
+        url('fonts/Courgette-Regular/Courgette-Regular.woff2') format('woff2'),
+        url('fonts/Courgette-Regular/Courgette-Regular.woff') format('woff'),
+        url('fonts/Courgette-Regular/Courgette-Regular.ttf') format('truetype'),
+        url('fonts/Courgette-Regular/Courgette-Regular.svg#Courgette-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
