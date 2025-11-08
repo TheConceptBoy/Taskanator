@@ -126,21 +126,21 @@ function delete_project_prompt(delete_btn){
     prompt_input.id = "prompt_project_confirm_input";
     prompt_input.type = "text";
     prompt_input.className = "input_style del_name_input";
-    prompt_input.placeholder = "project name";
+    prompt_input.placeholder = "retype project name here";
     prompt_panel.appendChild(prompt_input);
 
 
     var prompt_del_btn = document.createElement("input");
     prompt_del_btn.type = "button";
-    prompt_del_btn.value = "Confirm Project Deletion";
-    prompt_del_btn.className = "input_style input_button"
+    prompt_del_btn.value = "Confirm";
+    prompt_del_btn.className = "input_style input_button proj_del_btn"
     prompt_del_btn.onclick = ()=>{
         if (project_title == document.getElementById("prompt_project_confirm_input").value ){
             delete_project(project_id);
             popup_msg("Deleting Project", "warning", 5);
         }
         else{
-            popup_msg("Deletion Cancelled: Typed Name Mistmatch", "bad", 5);
+            popup_msg("Deletion Cancelled: Typed Name does not match Project Name", "bad", 5);
         }
 
         $(prompt_bg).fadeOut(500, ()=>{prompt_bg.remove();});
