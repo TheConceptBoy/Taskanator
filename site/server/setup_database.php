@@ -3,6 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
+$json_response = new stdClass();
+
+
 // only allow methods if setup.html is present in root
 if (!file_exists("./setup.html")){
     $json_response -> msg_text = "Setup Already Finished. No Operation";
@@ -10,7 +14,6 @@ if (!file_exists("./setup.html")){
     $json_response -> msg_type = "bad";
 }
 
-$json_response = new stdClass();
 
 if (isset($_POST["task"])){
     $task = $_POST["task"];
