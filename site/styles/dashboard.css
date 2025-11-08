@@ -54,7 +54,7 @@ body{
 .board_tabloid span{
     font-family: 'Pacifico';
     font-size: 20px;
-    columns: white;
+    color: white;
     padding: 10px;
 }
 
@@ -69,4 +69,23 @@ body{
     width: 25px;
     opacity: 0.25;
     transition: opacity 0.25s ease-out;
+}
+
+.del_proj_name{
+    font-weight: 600;
+    color: orange;
+}
+
+.prompt_info{
+    padding: 20px 0px;
+    text-align: center;
+    font-family: 'WDXL Lubrifont SC';
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.del_name_input{
+    text-align: center;
+    font-size: 30px;
+    color: orange;
 }

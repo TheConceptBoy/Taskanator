@@ -102,6 +102,28 @@ if ( !isset($_POST["task_type"]) ){
             
             exit(json_encode($json_response));
             break;
+
+        case "delete_board":
+            $board_id = $_POST["board_id"];
+            if($stmt = mysqli_prepare($conn, "DELETE FROM boards WHERE id = ?")){
+                mysqli_stmt_bind_param($stmt, "i", $board_id);
+                mysqli_stmt_execute($stmt);
+
+                if (mysqli_stmt_affected_rows($stmt) > 0){
+                    $json_response -> msg_text = "Project Deleted";
+                    $json_response -> msg_code = "project_removed";
+                    $json_response -> msg_type = "good";
+
+                }else{
+                    $json_response -> msg_text = "Failed to Delete Project";
+                    $json_response -> msg_code = "project_delete_failed";
+                    $json_response -> msg_type = "bad";
+                }
+
+                exit(json_encode($json_response));
+            }
+
+            break;
     }
 
     

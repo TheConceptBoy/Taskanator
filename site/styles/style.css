@@ -119,3 +119,31 @@ body{
 .input_button{
     cursor: pointer;
 }
+
+
+.prompt_bg{
+    background-color: rgba(0, 0, 0, 0.514);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+}
+
+.prompt_panel{
+    background-image: linear-gradient(90deg, rgb(26, 37, 37), rgb(44, 63, 63));
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+    display: grid;
+    row-gap: 5px;
+    color: white;
+}
+
+.prompt_panel:input{
+    width: 400px;
+}
