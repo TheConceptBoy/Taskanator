@@ -131,13 +131,17 @@
 
 
 
-        <div class="setup_section" id="section_4" style="display:none">]
+        <div class="setup_section" id="section_4" style="display:none">
             <div class="setup_complete">
-                <div class="setup_step_title">4/4 Setup Complete</div>
+                <div class="setup_step_title">Setup Complete</div>
                 
-                <div>Initial Setup Completed. You can proceed to the login page, where you can use your email and password to log into the dashboard. </div>
+                <div>
+                    Initial Setup Completed. You can proceed to the login page, where you can use your email and password to log into the dashboard. <br><br>
+                    Once you Click "Proceed to Login Page", this setup page will be disabled. It will be moved outside of root directory and any server side setup commands will no longer accept commands. <br><br>
+                    If you'd like to re-do the setup, you need to delete the old database and move the setup.html file back to the root of Taskanator (same location as index.html).
+                </div>
 
-                <input type="input" value="Proceed to Login Page" onclick="finish_setup()">
+                <input type="button" value="Proceed to Login Page" onclick="finish_setup()">
             </div>
         </div>
  

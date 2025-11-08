@@ -203,7 +203,12 @@ if (isset($_POST["task"])){
                 $json_response -> msg_code = "initialized";
                 $json_response -> msg_type = "good";
             }else{
-                $json_response -> msg_text = "Initial Steps Failed";
+                $compount_errors = "";
+                foreach($json_response->messages as $msg){
+                    $compount_errors .= $msg . "<br>";
+                }
+
+                $json_response -> msg_text = "Initial Steps Failed: <br>" . $compount_errors;
                 $json_response -> msg_code = "failed_to_initialize";
                 $json_response -> msg_type = "bad";
                 $json_response -> steps_completed = $success_count . "/" . $operation_count;
