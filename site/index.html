@@ -2,26 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taskanator</title>
-    <link rel="stylesheet" href="styles/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <script src="scripts/jquery-3.7.1.min.js"></script>
     <script src="scripts/jquery-ui-1.14.1.custom/jquery-ui.js"></script>
     <link rel="stylesheet" href="scripts/jquery-ui-1.14.1.custom/jquery-ui.css">
-    <script src="scripts/index.js"></script>
+
     <link rel="stylesheet" href="styles/style.css">
+    
+    <link rel="stylesheet" href="styles/index.css">
+    <script src="scripts/login.js"></script>
+
+    <script src="scripts/status_popups.js"></script>
+    <link rel="stylesheet" href="styles/status_popups.css">
+
+
 </head>
 <body>
 
-    <div class="login_header">Taskanator</div>
-    <span class="oneliner">Open Source Team Project Manager</span>
+
         
     <div id="login_panel" class="login_panel">
+        <div class="login_header_oneliner">
+            <div class="login_header">Taskanator</div>
+            <span class="oneliner">Open Source Team Project Manager</span>
+        </div>
         <span>Login in:</span>
-        <input type="email" placeholder="email" name="" id="login_email">
-        <input type="password" placeholder="password" name="" id="login_pass">
+        <input type="email" placeholder="email" id="login_email">
+        <input type="password" placeholder="password"  id="login_pass">
         <br>
-        <input type="button" value="Login">
+        <input type="button" value="Login" onclick="login_pressed(this)">
         <br>
         <div class="login_links">
             <a href="">create account</a>

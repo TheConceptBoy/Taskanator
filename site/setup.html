@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taskanator Setup</title>
-    <link rel="stylesheet" href="styles/setup.css">
+    
     <script src="scripts\jquery-3.7.1.min.js"></script>
+    <script src="scripts/jquery-ui-1.14.1.custom/jquery-ui.js"></script>
+    <link rel="stylesheet" href="scripts/jquery-ui-1.14.1.custom/jquery-ui.css">
+    
+    <link rel="stylesheet" href="styles/setup.css">
     <script src="scripts/setup.js"></script>
 
     <link rel="stylesheet" href="styles/style.css">
 
     <script src="scripts/status_popups.js"></script>
     <link rel="stylesheet" href="styles/status_popups.css">
+
+    <script src="scripts/login.js"></script>
 </head>
 <body>
     <div class="top_text">Initial Setup for Taskanator</div>
@@ -26,7 +32,7 @@
             <div class="two_half">
 
                 <div class="stage_desc">
-                    <div class="setup_step_title">1/4 Establish Database:</div>
+                    <div class="setup_step_title">Establish Database:</div>
                     Provide the username and password for your database engine. Also provide the name of the database which will be created to store taskanator boards, users, notes and other data. <br><br>
                     This username and password should already exist in your database. This step will not create a new one.
                 </div>
@@ -54,7 +60,7 @@
             <div class="two_half">
 
                 <div class="stage_desc">
-                    <div class="setup_step_title">2/4 Register Master User:</div> 
+                    <div class="setup_step_title">Register Master User:</div> 
                     This is where you register the master account under which you will be creating your project boards, notes, and managing other users who have access to your boards. <br><br>
                     There can only be 1 master account. Once a master account is registered, all attempts to register another one will fail.
                 </div>
@@ -83,7 +89,7 @@
             <div class="two_half">
 
                 <div class="stage_desc">
-                    <div class="setup_step_title">3/4 Permitted IP Addresses:</div> 
+                    <div class="setup_step_title">Permitted IP Addresses:</div> 
                     This is where you supply public IP filtering. Only requests originating from these IP addresses will be allowed to access the Taskanator Dashboard. <br><br> 
                     
                     You can find out your own IP by googling "Whats My IP" and visiting services like this: <a href="https://whatismyipaddress.com">https://whatismyipaddress.com</a>
@@ -141,7 +147,7 @@
                     If you'd like to re-do the setup, you need to delete the old database and move the setup.html file back to the root of Taskanator (same location as index.html).
                 </div>
 
-                <input type="button" value="Proceed to Login Page" onclick="finish_setup()">
+                <input type="button" value="Proceed to Login Page" onclick="finish_setup(this)">
             </div>
         </div>
  

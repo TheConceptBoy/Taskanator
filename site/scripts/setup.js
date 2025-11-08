@@ -239,21 +239,30 @@ function record_ip_filter(checkbox){
 
 
 
-function finish_setup(){
+function finish_setup(finish_button){
+    finish_button.disabled = true;
+    
     $.post("server/setup_scripts.php", {task:"finish"}, (data, status)=>{
         try{
             var json_response = JSON.parse(data);
-
+            
+            console.log(json_response);
+            
             popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
+            
+            if (json_response["msg_code"] == "setup_finished"){
+                window.location.replace("index.html");
+                console.log("navigating to login");
+          
+            }else{
 
-            if (json_response["msg_code"] == "setuo_finished"){
-                setTimeout(1000, ()=>{
-                    location = "index.html";
-                })
+                finish_button.disabled = false;
             }
         }
         catch(e){
-             popup_msg("failed to finalize setup", "warning", 5, "stage_user_status");
+            popup_msg("failed to finalize setup", "warning", 5, "stage_user_status");
+            finish_button.disabled = false;
         }
+        
     })
 }

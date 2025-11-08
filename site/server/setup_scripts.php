@@ -184,12 +184,21 @@ if (isset($_POST["task"])){
         
         case "finish":
 
-            # move the setup page out of the directory]
-            rename('./setup.html', './../setup.html');
+            try{
+                # move the setup page out of the directory]
+                rename('../setup.html', '../../setup.html');
 
-            $json_response -> msg_text = "Setup Finished. Setup File Disabled.";
-            $json_response -> msg_code = "setuo_finished";
-            $json_response -> msg_type = "good";
+                $json_response -> msg_text = "Setup Finished. Setup File Disabled.";
+                $json_response -> msg_code = "setup_finished";
+                $json_response -> msg_type = "good";
+
+            }catch(Exception $e){
+                $json_response -> msg_text = "Failed to Finished Setup.";
+                $json_response -> msg_code = "setup_finish_failed";
+                $json_response -> msg_type = "good";
+                
+            }
+            
         
 
             exit(json_encode($json_response));

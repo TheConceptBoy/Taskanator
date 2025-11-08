@@ -1,6 +1,13 @@
 <?php
     $json_login_respionse = new stdClass();
 
+    if (!file_exists("../../credentials.json")){
+        $json_response -> msg_text = "No Database Credentials found";
+        $json_response -> msg_code = "no_db_cred";
+        $json_response -> msg_type = "bad";
+        exit(json_encode($json_response));
+    }
+
     
     $file = fopen("../../credentials.json", "r");
     $dbdata = json_decode(fread($file, filesize("../../credentials.json")), true);

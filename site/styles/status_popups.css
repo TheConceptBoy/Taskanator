@@ -33,7 +33,7 @@
     text-align: center;
     border-radius: 10px;
     cursor: pointer;
-
+    filter: invert();
 }
 
 .popup_close:hover .popup_close_icon{

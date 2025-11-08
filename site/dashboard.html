@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskanator Dash</title>
+
+    <script src="scripts\jquery-3.7.1.min.js"></script>
+
+
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/login.js"></script>
+
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <script src="scripts/dashboard.js"></script>
+
+    <link rel="stylesheet" href="styles/status_popups.css">
+    <script src="scripts/status_popups.js"></script>
+
+    <script src="scripts/nav.js"></script>
+    
+</head>
+<body>
+
+    <nav class="nav"></nav>
+
+    <div class="page_center">
+
+        <div class="dash_section_title">Create Project</div>
+        <div class="dash_section_bar">
+            <input type="text" placeholder="New Project Name" id="new_project_title" class="input_style">
+            <input type="button" class="input_style input_button" value="create" onclick="create_project(this)">
+        </div>
+
+        <div id="project_grid"></div>
+
+    </div>
+    
+</body>
+</html>

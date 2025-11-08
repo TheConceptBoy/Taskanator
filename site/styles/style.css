@@ -24,6 +24,35 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'WDXL Lubrifont SC';
+    src: url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.eot');
+    src: url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.eot?#iefix') format('embedded-opentype'),
+        url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.woff2') format('woff2'),
+        url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.woff') format('woff'),
+        url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.ttf') format('truetype'),
+        url('fonts/WDXLLubrifontSC-Regular/WDXLLubrifontSC-Regular.svg#WDXLLubrifontSC-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pacifico';
+    src: url('fonts/Pacifico-Regular/Pacifico-Regular.eot');
+    src: url('fonts/Pacifico-Regular/Pacifico-Regular.eot?#iefix') format('embedded-opentype'),
+        url('fonts/Pacifico-Regular/Pacifico-Regular.woff2') format('woff2'),
+        url('fonts/Pacifico-Regular/Pacifico-Regular.woff') format('woff'),
+        url('fonts/Pacifico-Regular/Pacifico-Regular.ttf') format('truetype'),
+        url('fonts/Pacifico-Regular/Pacifico-Regular.svg#Pacifico-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+
 
 .button_green:hover{
     background-color: lightgreen;
@@ -33,5 +62,60 @@
     border: 1px solid #70d570;
     border-radius: 10px;
     padding: 10px;
+    cursor: pointer;
+}
+
+body{
+    margin: 0;
+}
+
+.nav{
+    background-color: rgb(26, 37, 37);
+    background-image: linear-gradient(90deg, rgb(26, 37, 37), rgb(44, 63, 63));
+    padding: 10px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.295);
+
+    border-radius: 0px 0px 10px 10px ;
+}
+
+.nav a:hover{
+    background-color: rgb(79, 110, 110);
+}
+.nav a{
+    background-color: rgb(51, 73, 73);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    margin-right: 5px;
+    font-family: 'WDXL Lubrifont SC';
+}
+
+.header_title{
+    font-family: 'SUSE Mono';
+    color:white;
+    margin-right: 20px;
+}
+
+.nav_div{
+    max-width: 900px;
+    margin: auto;
+}
+
+.input_style {
+    background-color: rgb(51, 73, 73);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+    margin-right: 5px;
+    font-family: 'WDXL Lubrifont SC';
+    border: none;
+}
+
+.input_button:disabled{
+    opacity: 0.5;
+}
+.input_button{
     cursor: pointer;
 }

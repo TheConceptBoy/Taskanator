@@ -102,7 +102,6 @@ if (isset($_POST["task"])){
                     id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     board_id INT(255),
                     user_id INT(255),
-                    board_name VARCHAR(128) DEFAULT 'owner',
                     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )");
