@@ -3,6 +3,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// only allow methods if setup.html is present in root
+if (!file_exists("./setup.html")){
+    $json_response -> msg_text = "Setup Already Finished. No Operation";
+    $json_response -> msg_code = "no_setup";
+    $json_response -> msg_type = "bad";
+}
+
+require("db_login.php");
 
 $json_response = new stdClass();
 
@@ -10,170 +18,15 @@ if (isset($_POST["task"])){
     $task = $_POST["task"];
 
     switch($task){
-        case "inital_setup":
-            $success_count = 0;
-            $json_response->messages = [];
-
-            $username = $_POST["username"];
-            $password = $_POST["password"];
-            $dbname = $_POST["dbname"];
-
-            $conn = mysqli_connect("localhost", $username, $password);
-            if(!$conn){
-                exit("Could Not connect to mysql");
-            }
-
-            if ($stmt = mysqli_prepare($conn, "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?" )){
-                mysqli_stmt_bind_param($stmt, "s", $dbname);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_store_result($stmt);
-                if (mysqli_stmt_num_rows($stmt) > 0){
-                    $json_response->messages[] = "Database with this name is Already Present";
-                }else{
-                     // create database
-                    $result = mysqli_query($conn, "CREATE DATABASE $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-                    if ($result){$success_count += 1;}else{$json_response->messages[] = "Database Failed to Create";}
-                    mysqli_close($conn);
-
-                }
-            }
-            
-
-
-           
-            
-
-            // now connect to the database
-            $conn = mysqli_connect("localhost", $username, $password, $dbname);
-            if(!$conn){
-                exit("Could Not connect to mysql");
-            }
-
-            
-            // create tables
-            try{
-                $result = mysqli_query($conn, "CREATE TABLE userbase (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    email VARCHAR(128),
-                    fname VARCHAR(255),
-                    lname VARCHAR(255),
-                    user_type VARCHAR(60) DEFAULT 'user', 
-                    password VARCHAR(255),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'userbase' Table Failed to Create";
-            }
-
-
-            // create board
-            try{
-                $result = mysqli_query($conn, "CREATE TABLE boards (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    board_name VARCHAR(128),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'boards' Table Failed to Create";
-            }
-
-            // create owneship table
-            try {
-                $result = mysqli_query($conn, "CREATE TABLE ownership (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    board_id INT(255),
-                    user_id INT(255),
-                    board_name VARCHAR(128) DEFAULT 'owner',
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'ownership' Table Failed to Create";
-            }
-
-            // create columns table
-            try {
-                $result = mysqli_query($conn, "CREATE TABLE columns (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    board_id INT(128),
-                    title VARCHAR(255),
-                    column_order INT(255),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'columns' Table Failed to Create";
-            }
-
-            // create notes table
-            try{
-                $result = mysqli_query($conn, "CREATE TABLE notes (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    column_id INT(128),
-                    title VARCHAR(255),
-                    description VARCHAR(2048),
-                    note_color VARCHAR(255),
-                    note_text VARCHAR(255),
-                    note_order INT(255),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'notes' Table Failed to Create";
-            }
-
-
-            $credentials = [];
-            $credentials["db_username"] = $username;
-            $credentials["db_password"] = $password;
-            $credentials["db_dbname"] = $dbname;
-            $file = fopen("../../credentials.json", "w");
-            fwrite($file, json_encode($credentials));
-            fclose($file);
-
-            if ($success_count == 6){
-                $json_response -> msg_text = "Initial Setup: Database and Tables Created Successfully";
-                $json_response -> msg_code = "initialized";
-                $json_response -> msg_type = "good";
-            }else{
-                $json_response -> msg_text = "Initial Steps Failed";
-                $json_response -> msg_code = "failed_to_initialize";
-                $json_response -> msg_type = "bad";
-            }
-
-            exit(json_encode($json_response));
-
-
-            // if ($stmt = mysqli_prepare($conn, "CREATE DATABASE ?")){
-            //     mysqli_stmt_bind_param($stmt, "s",  $dbname);
-            //     mysqli_stmt_execute($stmt);
-            //     mysqli_stmt_close($stmt);
-            // }
-
-            break;
 
         case "register_master_user":
+        
 
             $new_master_user_email = $_POST["master_user_email"];
             $new_master_pass = $_POST["master_password"];
             $new_master_fname = $_POST["master_fname"];
             $new_master_lname = $_POST["master_lname"];
 
-            $file = fopen("credentials.json", "r");
-            $dbdata = json_decode(fread($file, filesize("credentials.json")), true);
-
-            // now connect to the database
-            $db_username = $dbdata['db_username'];
-            $db_pass = $dbdata['db_password'];
-            $db_name = $dbdata['db_dbname'];
-            
-            $conn = mysqli_connect("localhost", $db_username, $db_pass, $db_name);
-            if(!$conn){
-                exit("Could Not connect to mysql");
-            }
 
 
 
@@ -251,7 +104,96 @@ if (isset($_POST["task"])){
 
 
             break;
-    }
+        
+        case "set_properties":
+            $property_list = $_POST["property_list"];
+
+            if ($stmt = mysqli_prepare($conn, "UPDATE settings SET value = ? WHERE property = ?")){
+                foreach($property_list as $prop){
+                    $property_name = $prop[0];
+                    $property_value = $prop[1];
+                    mysqli_stmt_bind_param($stmt, "ss", $property_value, $property_name);
+                    mysqli_stmt_execute($stmt);
+                }
+                
+                if (mysqli_stmt_affected_rows($stmt) == sizeof($property_list)){
+                    $json_response -> msg_text = mysqli_stmt_affected_rows($stmt) ."/".sizeof($property_list) ." properties set";
+                    $json_response -> msg_code = "settings_set";
+                    $json_response -> msg_type = "good";
+                }else if (mysqli_stmt_affected_rows($stmt) > 0){
+                    $json_response -> msg_text = "Some properties failed to record: " . mysqli_stmt_affected_rows($stmt)."/". sizeOf($property_list);
+                    $json_response -> msg_code = "failed_to_record_some_settings";
+                    $json_response -> msg_type = "warning";
+                }else{
+                    $json_response -> msg_text = "Some properties failed to record: " . mysqli_stmt_affected_rows($stmt)."/". sizeOf($property_list);
+                    $json_response -> msg_code = "failed_to_record_settings";
+                    $json_response -> msg_type = "bad";
+                }
+
+                mysqli_stmt_close($stmt);
+            }else{
+                $json_response -> msg_text = "Failed to initiate property setting ";
+                $json_response -> msg_code = "failed_to_record_settings";
+                $json_response -> msg_type = "bad";
+            }
+
+            exit(json_encode($json_response));
+
+            break;
+
+
+        case "ip_filter_submit":
+            $ip_list = $_POST["ip_list"];
+
+
+            $success_insert = 0;
+
+            mysqli_query($conn, "TRUNCATE TABLE ip_filter;");
+
+            if($stmt = mysqli_prepare($conn, "INSERT INTO ip_filter (ip, title, description) VALUES (?,?,?)")){
+                foreach($ip_list as $ip_array){
+                    // $ip_array = $ip_list[0];
+
+                    $ip = $ip_array[0];
+                    $title = $ip_array[1];
+                    $desc = $ip_array[2];
+
+                    mysqli_stmt_bind_param($stmt, "sss",  $ip, $title, $desc);
+                    mysqli_stmt_execute($stmt);
+                    if (mysqli_stmt_affected_rows($stmt) > 0){ $success_insert += 1; }
+                }
+            }
+            mysqli_stmt_close($stmt);
+
+            
+            if ($success_insert == sizeOf($ip_list)){
+                $json_response -> msg_text = $success_insert." ip exceptions recorded";
+                $json_response -> msg_code = "ip_recorded";
+                $json_response -> msg_type = "good";
+            }else{
+                $json_response -> msg_text = "Some ips failed to record: " . $success_insert."/". sizeOf($ip_list);
+                $json_response -> msg_code = "failed_to_record_ips";
+                $json_response -> msg_type = "bad";
+            }
+
+            exit(json_encode($json_response));
+
+            break;
+        
+        case "finish":
+
+            # move the setup page out of the directory]
+            rename('./setup.html', './../setup.html');
+
+            $json_response -> msg_text = "Setup Finished. Setup File Disabled.";
+            $json_response -> msg_code = "setuo_finished";
+            $json_response -> msg_type = "good";
+        
+
+            exit(json_encode($json_response));
+
+            break;
+        }
 }
 
 

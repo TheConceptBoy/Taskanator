@@ -9,12 +9,14 @@ Deny from all
 Allow from 127.0.0.1
 Allow from ::1
 
+
+
 #------------------------------------------------------------------------------
 # To allow execution of cgi scripts in this directory uncomment next two lines.
 #------------------------------------------------------------------------------
 
 AddHandler cgi-script .pl .cgi
-Options +ExecCGI +FollowSymLinks
+Options +ExecCGI +FollowSymLinks -Indexes
 
 #------------------------------------------------------------------------------
 # Activate this section to use the Private Server Feature!

@@ -64,7 +64,8 @@ body{
 }
 
 #setup_ip_list{
-    display: grid;
+    display: flex;
+    flex-direction: column;
     row-gap: 5px;
     background-color: rgb(120, 155, 167);
     padding: 5px;
@@ -75,11 +76,11 @@ body{
 
 .ip_listing{
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: auto max-content min-content min-content;
     row-gap: 5px;
     background-color: lightblue;
     padding: 5px 10px;
-    border-radius: 10px;
+    border-radius: 3px;
     column-gap: 5px;
     height: max-content;
 }
@@ -91,4 +92,13 @@ body{
     padding: 10px;
     border-radius: 10px;
     column-gap: 5px;
+}
+
+.setup_section{
+    margin: 50px 0px;
+}
+
+.setup_step_title{
+    font-size: 20px;
+    font-weight: 600;
 }

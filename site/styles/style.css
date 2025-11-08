@@ -25,3 +25,13 @@
 }
 
 
+.button_green:hover{
+    background-color: lightgreen;
+}
+.button_green{
+    background-color: rgb(204, 243, 204);
+    border: 1px solid #70d570;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+}
