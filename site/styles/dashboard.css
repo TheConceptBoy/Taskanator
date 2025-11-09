@@ -4,14 +4,11 @@ body{
 }
 
 
-.page_center{
-    max-width: 900px;
-    margin: auto;
-}
+
 
 .dash_section_bar{
     background-image: linear-gradient(90deg, rgb(26, 37, 37), rgb(44, 63, 63));
-    padding: 5px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.267);
 
@@ -20,6 +17,7 @@ body{
     border-left-color: rgb(59 76 81);
     border-right-color: rgb(72 94 101);
     border-bottom-color: rgb(57 77 83);
+    
 }
 
 .dash_section_title{
@@ -27,6 +25,17 @@ body{
     color: white;
     font-size: 30px;
     padding: 10px 0px;
+    display: inline-block;
+}
+
+.dash_section_title_small{
+    font-family: 'WDXL Lubrifont SC';
+    font-family: 'Pacifico';
+    color: white;
+    font-size: 20px;
+    /* padding: 0px 20px; */
+    display: inline-block;
+    width: max-content;
 }
 
 #project_grid{
@@ -51,6 +60,7 @@ body{
     background-color: #51656b;
 }
 
+
 .board_tabloid span{
     font-family: 'Pacifico';
     font-size: 20px;
@@ -58,18 +68,22 @@ body{
     padding: 10px;
 }
 
-
-.board_trash_btn:hover{
-    opacity: 1.0;
-}
 .board_trash_btn{
     position: absolute;
     bottom: 10px;
     right: 10px;
     width: 25px;
     opacity: 0.25;
-    transition: opacity 0.25s ease-out;
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    transform: rotate(-25deg);
+    cursor: pointer;
 }
+
+.board_trash_btn:hover{
+    opacity: 1.0;
+    transform: rotate(10deg);
+}
+
 
 .del_proj_name{
     font-weight: 600;
@@ -92,4 +106,59 @@ body{
 
 .proj_del_btn{
     font-size: 20px;
+}
+
+
+
+.project_title_header{
+
+}
+
+.proj_back_to_manager_btn{
+    width: 24px;
+    cursor: pointer;
+    opacity: 0.5;
+    margin-right: 0px;
+    transition: margin-right 0.25s ease-out;
+}
+.proj_back_to_manager_btn:hover{
+    opacity: 1.0;
+    margin-right: 25px;
+}
+
+
+.project_component_grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 5px;
+    column-gap: 5px;
+    margin: 5px 0px;
+    min-height: 90px;
+}
+
+
+
+.list_add_panel{
+    background-color: #2d383b;
+    border-radius: 10px;
+    display: grid;
+    grid-template-rows: 40px min-content min-content;
+    row-gap: 5px;
+    padding: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.5s ease-out;
+}
+
+.list_add_panel:hover{
+    background-color: #51656b;
+}
+
+.proj_add_new_input_container{
+    float: right;
+}
+
+
+.disabled_a{
+    filter: brightness(0.5);
 }

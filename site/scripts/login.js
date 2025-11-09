@@ -22,7 +22,8 @@ function login_pressed(btn){
                     console.log("navigating to dash");
 
                     setTimeout(()=>{
-                        window.location.assign("dashboard.html");
+                        window.location.replace("dashboard.html")
+                        // window.location.assign("dashboard.html");
                     }, 1000);
                 }
                 

@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Taskanator Dash</title>
 
-    <script src="scripts\jquery-3.7.1.min.js"></script>
+    <script src="scripts/jquery-3.7.1.min.js"></script>
+    <script src="scripts/jquery-ui-1.14.1.custom/jquery-ui.js"></script>
+    <link rel="stylesheet" href="scripts/jquery-ui-1.14.1.custom/jquery-ui.css">
+
 
 
     <link rel="stylesheet" href="styles/style.css">
@@ -26,13 +29,48 @@
 
     <div class="page_center">
 
-        <div class="dash_section_title">Project Management</div>
-        <div class="dash_section_bar">
-            <input type="text" placeholder="New Project Name" id="new_project_title" class="input_style">
-            <input type="button" class="input_style input_button" value="create" onclick="create_project(this)">
+        <div class="dash_section" id="boards_manager">
+            
+            <div class="dash_section_title">Project Management</div>
+            <div class="dash_section_bar">
+                <input type="text" placeholder="New Project Name" id="new_project_title" class="input_style">
+                <input type="button" class="input_style input_button" value="create" onclick="create_project(this)">
+                <img src="images/icons/load_4.png" id="new_project_load_icon" class="load_rotating load_invisible" alt="">
+            </div>
+            
+            <div id="project_grid"></div>
         </div>
 
-        <div id="project_grid"></div>
+        <div class="dash_section dash_exit_right" id="board_tools_panel" style="display: none;">
+
+            <div id="">
+                <img src="images/icons/left_arrow.png" class="proj_back_to_manager_btn" onclick="back_to_dashboard()">
+                <div class= "dash_section_title" id="project_title_header"></div>
+
+                <div class="dash_section_bar">
+                    <div class="dash_section_title_small">ToDo Lists</div>
+                    <span class="proj_add_new_input_container">
+                        <input type="text" value="" placeholder="new list name" class="input_style" id="new_list_title">
+                        <input type="button" value="create list" class="input_style input_button" onclick="add_list(this)">
+                    </span>
+                    
+                </div>
+
+                <div id="lists_grid" class="project_component_grid"> </div>
+                
+                <div class="dash_section_bar">
+                    <div class="dash_section_title_small">Graphing Boards</div>
+                    <span class="proj_add_new_input_container">
+                        <input type="text" value="" placeholder="new list name" class="input_style" id="new_graph_title">
+                        <input type="button" value="create list" class="input_style input_button" onclick="add_graph(this)">
+                    </span>
+                </div>
+                
+                <div id="graph_grid" class="project_component_grid"></div>
+
+            </div>
+
+        </div>
 
     </div>
     

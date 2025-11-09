@@ -95,6 +95,36 @@ if (isset($_POST["task"])){
                 $json_response->messages[] = "'boards' Table Failed to Create";
             }
 
+            // create todo list table
+            $operation_count += 1;
+            try{
+                $result = mysqli_query($conn, "CREATE TABLE todo_lists (
+                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    list_name VARCHAR(128),
+                    board_id int(255),
+                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )");
+                $success_count += 1;
+            } catch(Exception $e){
+                $json_response->messages[] = "'boards' Table Failed to Create";
+            }
+
+            // create graphs list table
+            $operation_count += 1;
+            try{
+                $result = mysqli_query($conn, "CREATE TABLE graphs (
+                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    graph_name VARCHAR(128),
+                    board_id int(255),
+                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )");
+                $success_count += 1;
+            } catch(Exception $e){
+                $json_response->messages[] = "'boards' Table Failed to Create";
+            }
+
             // create owneship table
             $operation_count += 1;
             try {
