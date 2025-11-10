@@ -1,0 +1,314 @@
+#todo_list_editor{
+    background-image: url("../images/backgrounds/todo_list.jpg");
+    background-size: 100%;
+    border-radius: 10px;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    transform: scale(1);
+    opacity: 1.0;
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    box-shadow: 0px 5px 5px black;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+}
+
+
+.todo_invisible{
+    /* opacity: 0.0 !important;
+    transform: scale(0.95) !important;
+    pointer-events: none; */
+}
+
+.top_right_absolute{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+}
+
+.todo_top_bar{
+    position: sticky;
+    display: grid;
+    grid-template-columns: auto max-content;
+    pad: 5px;
+    left: 0px;
+}
+
+#todo_editor_name{
+    font-family: 'Pacifico';
+    font-size: 20px;
+    color: white;
+    /* padding: 0px 20px; */
+    display: inline-block;
+    width: max-content;
+    margin: 0px 10px;
+}
+
+.todo_column_container{
+    margin-top: 5px;
+    display: flex;
+    column-gap: 5px;
+}
+
+.todo_column{
+    background-color: rgb(126, 134, 139);
+    border-radius: 10px;
+    min-width: 250px;
+    padding: 3px;
+    /* min-height: 300px; */
+    display: flex;
+    row-gap: 5px;
+    box-shadow: 0px 5px 5px black;
+    flex-direction: column;
+    background-image: linear-gradient(45deg, #232d31, #364e55);
+    height: max-content;
+}
+
+.col_top_bar{
+    display: grid;
+    grid-template-columns: auto max-content;
+    column-gap: 3px;
+}
+
+.todo_col_title{
+    font-family: 'WDXL Lubrifont SC';
+    background-color: #48616b;
+    border-radius: 5px;
+    padding: 5px;
+    transition: background-color 0.5s ease-out;
+    color: white;
+    font-size: 15px;
+    /* box-shadow: 0px 3px 5px #364950; */
+    cursor: text;
+    border: none;
+}
+.todo_col_title:focus{
+    background-color: #364950
+}
+
+.todo_col_close{
+    width: 25px;
+    opacity: 0.5;
+    transition: opacity 0.25s ease-out, background-color 0.25s ease-out;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 5px;
+}
+.todo_col_close:hover{
+    filter: saturate();
+    opacity: 1.0;
+    background-color: crimson;
+}
+
+.note:hover .note_side_pane{
+    opacity: 1.0;
+}
+
+.note_side_pane{
+    display: flex;
+    /* flex-direction: column; */
+    transition: opacity 0.25s ease-out;
+    row-gap: 5px;
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    opacity: 0;
+    /* padding: 4px; */
+}
+
+.note_checkbox{
+    width: 16px;
+    height: 16px;
+    background-color: #48616b;
+    margin: 0px;
+    cursor: pointer;
+}
+
+.todo_col_close_float_right{
+    background-color: #48616b;
+    width: 16px;
+    opacity: 0.5;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.todo_col_close_float_right:hover{
+    opacity: 1.0;
+    background-color: crimson;
+}
+
+.note_edit{
+    width: 16px;
+    opacity: 0.5;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.note_edit:hover{
+    opacity: 1.0;
+    /* background-color: #48616b; */
+}
+
+
+#todo_columns_list{
+    display: flex;
+    column-gap: 5px;
+}
+
+.todo_add_col{
+    height: 300px;
+    background-color: rgba(80, 101, 107, 0.425);
+    position: relative;
+    min-width: 100px;
+    box-shadow: 0px 5px 10px black;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.todo_add_col:hover .todo_col_plus{
+    opacity: 1.0;
+}
+
+.todo_col_plus{
+    position: absolute;
+    opacity: 0.5;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    transition: opacity 0.5s ease-out;
+}
+
+.note_list{
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    min-height: 5px;
+}
+
+
+.add_note_btn{
+    /* background-color: #5d7883; */
+    transition: background-color, 0.25s ease-out;
+    border-radius: 5px;
+    position: relative;
+    height: 24px;
+    cursor: pointer;
+}
+.add_note_btn:hover{
+    background-color: #6f93a1;
+}
+
+.add_note_icon{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+
+}
+
+.note{
+    background-color: #5d7883;
+    display: grid;
+    grid-template-columns: 5px auto;
+    column-gap: 5px;
+    /* flex-direction: column; */
+    border-radius: 5px;
+    padding: 3px 0px 3px 3px;
+
+    filter: brightness(1);
+}
+
+.note_top_bar{
+    display: grid;
+    grid-template-columns: auto max-content;
+    /* column-gap: 5px; */
+
+}
+
+.note_textarea{
+    font-family: 'WDXL Lubrifont SC';
+    color: white;
+    resize: vertical;
+    /* background-color: #465e68; */
+    /* padding: 5px; */
+    /* margin: 3px; */
+    /* height: 100%; */
+    min-height: 70px;
+    background: none;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+.note_drag_bar{
+    background-color: #48616b;
+    /* min-height: 8px; */
+    min-width: 5px;
+    height: 100%;
+    /* border-radius: 0px 0px 10px; */
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.col_drag_bar{
+    background-color: #48616b;
+    /* min-height: 8px; */
+    /* min-width: 5px; */
+    height: 5px;
+    /* border-radius: 0px 0px 10px; */
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0px 10px;
+}
+
+.col_sortable_placeholder{
+    min-height: 50px;
+    min-width: 200px;
+    border: 1px dashed white;
+    border-radius: 10px;
+}
+.note_sortable_placeholder{
+    min-height: 60px;
+    min-width: 100%;
+    border: 1px dashed white;
+    border-radius: 10px;
+}
+
+
+.note_add_between{
+    position: absolute;
+    top: -5px;
+    height: 0px;
+    border: 2px dashed white;
+    width: 100%;
+    opacity: 0.0;
+    transition: opacity 0.5s ease-out;
+    /* margin: 0px 20px; */
+}
+.note_add_between:hover{
+    opacity: 1.0;
+}
+
+.add_between_plus{
+    position: absolute;
+    left: 50%;
+    width: 16px;
+    background-color: #48616b;
+    padding: 5px;
+    transform: translate(-50%, -50%);
+    border: 2px solid rgb(62, 96, 109);
+    border-radius: 16px;
+    cursor: pointer;
+}
+.add_between_plus:hover{
+    background-color: rgb(91, 133, 150);
+}
+
+.col_input_disabled{
+    pointer-events: none;
+    opacity: 0.5;
+}

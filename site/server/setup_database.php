@@ -110,6 +110,39 @@ if (isset($_POST["task"])){
                 $json_response->messages[] = "'boards' Table Failed to Create";
             }
 
+            // create columns table
+            $operation_count += 1;
+            try {
+                $result = mysqli_query($conn, "CREATE TABLE columns (
+                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    board_id INT(128),
+                    title VARCHAR(255),
+                    column_order INT(255),
+                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )");
+                $success_count += 1;
+            } catch(Exception $e){
+                $json_response->messages[] = "'columns' Table Failed to Create";
+            }
+
+            // create columns table
+            $operation_count += 1;
+            try {
+                $result = mysqli_query($conn, "CREATE TABLE column_notes (
+                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    column_id INT(128),
+                    note_text TEXT,
+                    note_order INT(255),
+                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                )");
+                $success_count += 1;
+            } catch(Exception $e){
+                $json_response->messages[] = "'columns' Table Failed to Create";
+            }
+
+
             // create graphs list table
             $operation_count += 1;
             try{
@@ -140,21 +173,7 @@ if (isset($_POST["task"])){
                 $json_response->messages[] = "'ownership' Table Failed to Create";
             }
 
-            // create columns table
-            $operation_count += 1;
-            try {
-                $result = mysqli_query($conn, "CREATE TABLE columns (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    board_id INT(128),
-                    title VARCHAR(255),
-                    column_order INT(255),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'columns' Table Failed to Create";
-            }
+            
 
             // create notes table
             $operation_count += 1;

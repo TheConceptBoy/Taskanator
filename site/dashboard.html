@@ -21,6 +21,9 @@
     <script src="scripts/status_popups.js"></script>
 
     <script src="scripts/nav.js"></script>
+
+    <link rel="stylesheet" href="styles/todo.css">
+    <script src="scripts/todo.js"></script>
     
 </head>
 <body>
@@ -72,6 +75,27 @@
 
         </div>
 
+    </div>
+
+
+    <div id="todo_list_editor" style="display: noneZ;" class="todo_invisible" todo_id="22" board_id="35"> 
+        <div class="dash_section_bar todo_top_bar">
+            <div id="todo_editor_name">ToDo List Name</div>
+            <input type="button" class="input_style input_button" value="close" onclick="close_todo_editor()">
+        </div>
+
+        <div class="todo_column_container">
+            <!-- <div class="todo_column">
+                <div class="todo_col_title">New Column Title</div>
+            </div> -->
+
+
+            <div id="todo_columns_list"></div>
+            <div class="todo_add_col" onclick="add_column_clicked(this)">
+                <img src="images/icons/plus.png" class="todo_col_plus">
+            </div>
+
+        </div>
     </div>
     
 </body>

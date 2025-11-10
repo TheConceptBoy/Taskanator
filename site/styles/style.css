@@ -67,6 +67,8 @@
 
 body{
     margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 .nav{
@@ -215,4 +217,13 @@ body{
     from{transform: rotate(0deg);}
     to{transform: rotate(360deg);}
     
+}
+
+.input_disabled{
+    pointer-events: none;
+}
+
+.tabloid_input_disabled{
+    filter:brightness(50%);
+    pointer-events: none;
 }

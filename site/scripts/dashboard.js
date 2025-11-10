@@ -487,6 +487,9 @@ function create_list_tabloid(id, title, board_owner_id=null, fade=false, ){
     new_list_tabloid.setAttribute("todo_list_id", id);
     new_list_tabloid.setAttribute("my_board_id", board_owner_id);
     new_list_tabloid.classList = "list_add_panel";
+    new_list_tabloid.onclick = ()=>{
+        open_todo_editor(id, title, board_owner_id, new_list_tabloid);
+    }
     lists_grid.appendChild(new_list_tabloid);
 
     var title_span = document.createElement("span")
@@ -541,4 +544,68 @@ function create_graph_tabloid(id, title, board_owner_id=null, fade=false, ){
     if (fade){
         $(new_graph_tabloid).css("display", "none").fadeIn(500);
     }
+}
+
+
+
+function open_todo_editor(todo_id, title, board_owner_id, btn){
+    console.log("open todo")
+    var todo_list_editor = document.getElementById("todo_list_editor");
+
+    btn.classList.add("tabloid_input_disabled");
+
+    popup_msg("Fetching ToDo List", "warning", 5);
+
+    $.post("server/todo.php", {task_type:"get_todo_content", todo_id:todo_id, board_id:board_owner_id}, (data, status)=>{
+        console.log(data);
+        try{
+
+            var json_response = JSON.parse(data);
+            popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
+
+            if (json_response["msg_code"] == "todo_column_load_success"){
+                
+                
+                // open ToDo list container
+                todo_list_editor.querySelector("#todo_editor_name").innerHTML = "ToDo: " + title;
+
+                todo_list_editor.setAttribute("todo_id", todo_id);
+                todo_list_editor.setAttribute("board_id", board_owner_id);
+
+                todo_list_editor.style.display = "block";
+                setTimeout(()=>{
+                    todo_list_editor.classList.remove("todo_invisible");
+                }, 5);
+
+
+                ToDoListSetup(json_response["columns"]);
+
+
+            }
+
+        }catch(e){
+            popup_msg(e + "<br><br>" + data, "bad", 15);
+            console.log(e);
+        }
+
+        btn.classList.remove("tabloid_input_disabled");
+    })
+
+
+
+
+
+    
+}
+
+
+function close_todo_editor(){
+    console.log("close todo")
+    var todo_list_editor = document.getElementById("todo_list_editor");
+
+    todo_list_editor.classList.add("todo_invisible");
+    setTimeout(()=>{
+        todo_list_editor.style.display = "none";
+    }, 501);
+
 }
