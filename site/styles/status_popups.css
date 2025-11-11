@@ -10,8 +10,8 @@
 
 #status_float_box{
     position: fixed;
-    left:10px;
-    bottom: 10px;
+    left:15px;
+    bottom: 15px;
     width: max-content;
     display: grid;
     row-gap: 5px;

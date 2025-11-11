@@ -31,7 +31,7 @@ if ( !isset($_POST["task_type"]) ){
             $todo_id = $_POST["todo_id"];
             $board_id = $_POST["board_id"];
 
-            if($stmt = mysqli_prepare($conn, "SELECT columns.id, title FROM columns WHERE columns.todo_id = ? ") ){
+            if($stmt = mysqli_prepare($conn, "SELECT columns.id, title FROM columns WHERE columns.todo_id = ? ORDER BY column_order ASC ") ){
                 mysqli_stmt_bind_param($stmt, "i", $todo_id);
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_store_result($stmt);
@@ -44,7 +44,7 @@ if ( !isset($_POST["task_type"]) ){
                     $c_info["col_title"] = $col_title;
 
                     // load notes for each column
-                    if ($stmt_note = mysqli_prepare($conn, "SELECT id, note_text FROM column_notes WHERE column_id = ?")){
+                    if ($stmt_note = mysqli_prepare($conn, "SELECT id, note_text FROM column_notes WHERE column_id = ? ORDER BY note_order ASC")){
                         mysqli_stmt_bind_param($stmt_note, "i", $col_id);
                         mysqli_stmt_execute($stmt_note);
                         mysqli_stmt_bind_result($stmt_note, $note_id, $note_text);
@@ -115,7 +115,6 @@ if ( !isset($_POST["task_type"]) ){
         
         case "create_note":
             $col_id = $_POST["col_id"];
-            $todo_id = $_POST["todo_id"];
             $board_id = $_POST["board_id"];
 
             // CHECK BOARD AND COLUMN OWNERSHIP HERE!
@@ -194,6 +193,36 @@ if ( !isset($_POST["task_type"]) ){
             }
 
             break;
+        case "set_note_order":
+            $note_order_list = $_POST["note_order"];
+            $board_id = $_POST["board_id"];
+
+            if($stmt = mysqli_prepare($conn, "UPDATE column_notes SET note_order = ? WHERE id = ?")){
+                
+                foreach($note_order_list as $note){
+                    $note_id = $note[1];
+                    $note_order = $note[0];
+                    mysqli_stmt_bind_param($stmt, "ii", $note_order, $note_id);
+                    mysqli_stmt_execute($stmt);
+                }
+
+                if (mysqli_stmt_affected_rows($stmt) > 0){
+                    $json_response -> msg_text = "Note Order Updated";
+                    $json_response -> msg_code = "note_order_updated";
+                    $json_response -> msg_type = "good";
+
+                }else{
+                    $json_response -> msg_text = "Note Order Update Failed";
+                    $json_response -> msg_code = "note_order_update_fail";
+                    $json_response -> msg_type = "bad";
+                    $json_response -> error = mysqli_error($conn);
+                    // $json_response -> data = [$note_id, $new_text];
+                }
+                mysqli_stmt_close($stmt);
+                exit(json_encode($json_response));
+            }
+
+            break;
 
         case "update_column_title":
             $column_id = $_POST["column_id"];
@@ -220,193 +249,59 @@ if ( !isset($_POST["task_type"]) ){
 
             break;
             
-        case "load_project_content":
-            $success_count = 0;
-            $project_graphs = [];
+        case "delete_column":
+            $column_id = $_POST["column_id"];
+
+            // check ownership HERE
+
+            // get todo lists
+            if($stmt = mysqli_prepare($conn, "DELETE FROM columns WHERE id = ? ") ){
+                mysqli_stmt_bind_param($stmt, "i", $column_id);
+                mysqli_stmt_execute($stmt);
+                if (mysqli_stmt_affected_rows($stmt) > 0){}
+                    $json_response -> msg_text = "Column Deleted";
+                    $json_response -> msg_code = "column_delete_success";
+                    $json_response -> msg_type = "good";
+                } else {
+                    $json_response -> msg_text = "Failed to Delete Column";
+                    $json_response -> msg_code = "failed_column_delete";
+                    $json_response -> msg_type = "bad";
+
+                }
+                mysqli_stmt_close($stmt);
+
+                exit(json_encode($json_response));
+            
+
+            break;
+        
+        case "delete_note":
+            $note_id = $_POST["note_id"];
             $board_id = $_POST["board_id"];
 
             // check ownership HERE
 
             // get todo lists
-            if($stmt = mysqli_prepare($conn, "SELECT todo_lists.id, list_name FROM todo_lists LEFT JOIN boards ON todo_lists.board_id = boards.id WHERE boards.id = ? ") ){
-                mysqli_stmt_bind_param($stmt, "i", $board_id);
+            if($stmt = mysqli_prepare($conn, "DELETE FROM column_notes WHERE id = ? ") ){
+                mysqli_stmt_bind_param($stmt, "i", $note_id);
                 mysqli_stmt_execute($stmt);
-                mysqli_stmt_bind_result($stmt, $list_id, $list_name);
+                if (mysqli_stmt_affected_rows($stmt) > 0){}
+                    $json_response -> msg_text = "Note Deleted";
+                    $json_response -> msg_code = "note_delete_success";
+                    $json_response -> msg_type = "good";
+                } else {
+                    $json_response -> msg_text = "Failed to Delete Note";
+                    $json_response -> msg_code = "failed_note_delete";
+                    $json_response -> msg_type = "bad";
 
-                $project_todo_lists = [];
-                while(mysqli_stmt_fetch($stmt)){
-                    $l_info=[];
-                    $l_info["todo_list_id"] = $list_id;
-                    $l_info["todo_list_name"] = $list_name;
-
-                    $project_todo_lists[] = $l_info;
                 }
-
                 mysqli_stmt_close($stmt);
-                
-                # record into response
-                $json_response -> todo_lists = $project_todo_lists;
-                $success_count += 1;
 
-            }
-
-            // get graphs
-            if($stmt = mysqli_prepare($conn, "SELECT graphs.id, graph_name FROM graphs LEFT JOIN boards ON graphs.board_id = boards.id WHERE boards.id = ? ") ){
-                mysqli_stmt_bind_param($stmt, "i", $board_id);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_bind_result($stmt, $graph_id, $graph_name);
-
-                $project_graph_lists = [];
-                while(mysqli_stmt_fetch($stmt)){
-                    $g_info=[];
-                    $g_info["graph_id"] = $graph_id;
-                    $g_info["graph_name"] = $graph_name;
-
-                    $project_graph_lists[] = $g_info;
-                }
-
-                mysqli_stmt_close($stmt);
-                
-                # record into response
-                $json_response -> graphs = $project_graph_lists;
-                $success_count += 1;
-
-            }
-
-            if ($success_count == 2){
-                $json_response -> msg_text = "Projects Content Loaded";
-                $json_response -> msg_code = "project_load_success";
-                $json_response -> msg_type = "good";
-            }
-            else if($success_count == 1){
-                $json_response -> msg_text = "Some Projects Content Failed to Load";
-                $json_response -> msg_code = "project_load_success";
-                $json_response -> msg_type = "warning";
-            }else{
-                $json_response -> msg_text = "Failed to Fetch Projects";
-                $json_response -> msg_code = "failed_project_load";
-                $json_response -> msg_type = "bad";
-
-            }
-
-            exit(json_encode($json_response));
+                exit(json_encode($json_response));
+            
 
             break;
         
-        case "delete_todo_list":
-            $todo_id = $_POST["todo_id"];
-            $board_id = $_POST["board_id"];
-
-            // CHECK BOARD ID OWHERSHIP HERE
-
-            if($stmt = mysqli_prepare($conn, "DELETE FROM todo_lists WHERE todo_lists.id = ? AND board_id = ?")){
-                mysqli_stmt_bind_param($stmt, "ii", $todo_id, $board_id);
-                mysqli_stmt_execute($stmt);
-
-                if (mysqli_stmt_affected_rows($stmt) > 0){
-                    $json_response -> msg_text = "Todo List Deleted";
-                    $json_response -> msg_code = "todo_removed";
-                    $json_response -> msg_type = "good";
-
-                }else{
-                    $json_response -> msg_text = "Failed to Delete Todo List";
-                    $json_response -> msg_code = "todo_delete_failed";
-                    $json_response -> msg_type = "bad";
-                    // $json_response -> data = [$todo_id,  $board_id];
-                }
-
-                exit(json_encode($json_response));
-            }
-
-            break;
-
-        case "delete_graph":
-            $todo_id = $_POST["todo_id"];
-            $board_id = $_POST["board_id"];
-
-            // CHECK BOARD ID OWHERSHIP HERE
-
-            if($stmt = mysqli_prepare($conn, "DELETE FROM graphs WHERE graphs.id = ? AND board_id = ?")){
-                mysqli_stmt_bind_param($stmt, "ii", $todo_id, $board_id);
-                mysqli_stmt_execute($stmt);
-
-                if (mysqli_stmt_affected_rows($stmt) > 0){
-                    $json_response -> msg_text = "Graph List Deleted";
-                    $json_response -> msg_code = "graph_removed";
-                    $json_response -> msg_type = "good";
-
-                }else{
-                    $json_response -> msg_text = "Failed to Delete Graph";
-                    $json_response -> msg_code = "graph_delete_failed";
-                    $json_response -> msg_type = "bad";
-                    // $json_response -> data = [$todo_id,  $board_id];
-                }
-
-                exit(json_encode($json_response));
-            }
-
-            break;
-
-
-        case "create_todo_list":
-            $proj_title = $_POST["title"];
-            $board_id = $_POST["board_id"];
-
-            if($stmt = mysqli_prepare($conn, "INSERT INTO todo_lists (list_name, board_id) VALUES (?, ?)")){
-                mysqli_stmt_bind_param($stmt, "si", $proj_title, $board_id);
-                mysqli_stmt_execute($stmt);
-                if (mysqli_stmt_affected_rows($stmt) > 0){
-                    $new_id = mysqli_stmt_insert_id($stmt);
-                    mysqli_stmt_close($stmt);
-
-                    $json_response -> msg_text = "ToDo List Created";
-                    $json_response -> msg_code = "todo_made";
-                    $json_response -> msg_type = "good";
-                    $json_response -> new_id = $new_id;
-
-                }else{
-                    $json_response -> msg_text = "ToDo list Creation Failed";
-                    $json_response -> msg_code = "todo_failed";
-                    $json_response -> msg_type = "bad";
-                }
-            }else{
-                $json_response -> msg_text = "ToDo List Create Failed: Can't Prep";
-                $json_response -> msg_code = "todo_failed_prep";
-                $json_response -> msg_type = "bad";
-            }
-            
-            exit(json_encode($json_response));
-            break;
-
-        case "create_graph":
-            $graph_title = $_POST["title"];
-            $board_id = $_POST["board_id"];
-
-            if($stmt = mysqli_prepare($conn, "INSERT INTO graphs (graph_name, board_id) VALUES (?, ?)")){
-                mysqli_stmt_bind_param($stmt, "si", $graph_title, $board_id);
-                mysqli_stmt_execute($stmt);
-                if (mysqli_stmt_affected_rows($stmt) > 0){
-                    $new_id = mysqli_stmt_insert_id($stmt);
-                    mysqli_stmt_close($stmt);
-
-                    $json_response -> msg_text = "Graph List Created";
-                    $json_response -> msg_code = "graph_made";
-                    $json_response -> msg_type = "good";
-                    $json_response -> new_id = $new_id;
-
-                }else{
-                    $json_response -> msg_text = "Graph Creation Failed";
-                    $json_response -> msg_code = "graph_failed";
-                    $json_response -> msg_type = "bad";
-                }
-            }else{
-                $json_response -> msg_text = "Graph Create Failed: Can't Prep";
-                $json_response -> msg_code = "graph_failed_prep";
-                $json_response -> msg_type = "bad";
-            }
-            
-            exit(json_encode($json_response));
-            break;
     }
 
     

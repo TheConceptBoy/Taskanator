@@ -227,3 +227,9 @@ body{
     filter:brightness(50%);
     pointer-events: none;
 }
+
+.disabled_dark{
+    filter:brightness(50%) !important;
+    transition: filter 0.5s ease-out;
+    pointer-events: none;
+}

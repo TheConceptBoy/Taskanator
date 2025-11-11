@@ -115,7 +115,7 @@
     row-gap: 5px;
     position: absolute;
     top: 5px;
-    right: 8px;
+    right: 5px;
     opacity: 0;
     /* padding: 4px; */
 }
@@ -213,7 +213,7 @@
 .note{
     background-color: #5d7883;
     display: grid;
-    grid-template-columns: 5px auto;
+    grid-template-columns: max-content auto;
     column-gap: 5px;
     /* flex-direction: column; */
     border-radius: 5px;
@@ -250,15 +250,15 @@
     min-width: 5px;
     height: 100%;
     /* border-radius: 0px 0px 10px; */
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
 .col_drag_bar{
-    background-color: #48616b;
+    background-color: #48616b7a;
     /* min-height: 8px; */
     /* min-width: 5px; */
-    height: 5px;
+    height: 10px;
     /* border-radius: 0px 0px 10px; */
     border-radius: 10px;
     cursor: pointer;
@@ -311,4 +311,10 @@
 .col_input_disabled{
     pointer-events: none;
     opacity: 0.5;
+}
+
+.note_left_bar{
+    display: grid;
+    row-gap: 3px;
+    grid-template-rows: max-content auto;
 }
