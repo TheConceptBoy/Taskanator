@@ -3,7 +3,11 @@ window.addEventListener("load", ()=>{
     $("#todo_columns_list").sortable({
         placeholder: "col_sortable_placeholder",
         handle: ".col_drag_bar",
-        tolerance: "pointer"
+        tolerance: "pointer",
+        update: function( event, ui ) {
+            console.log("event", event);
+            save_column_order(event.target);
+        }
     });
 })
 
@@ -14,14 +18,12 @@ function clear_columns(){
 
 
 function ToDoListSetup(array_columns){ // called by dasboard.js when clicking on todo list tabloid 
-    clear_columns()
-    
     // popilate columns
     for(var c of array_columns){
         var column = add_column(c["col_id"], c["col_title"]);
         var column_note_list = column.querySelector(".note_list");
         for(n of c["notes"]){
-            create_note(n["note_id"], n["note_text"], column_note_list);
+            create_note(n["note_id"], n["note_text"], column_note_list, n["note_checked"]);
         }
     }
 }
@@ -34,7 +36,7 @@ function add_column_clicked(btn){
     var todo_id = todo_list_editor.getAttribute("todo_id");
     var board_id = todo_list_editor.getAttribute("board_id");
 
-    popup_msg("creating column", "warning", 5);
+    // popup_msg("creating column", "warning", 5);
 
     $.post("server/todo.php", {task_type:"create_column", todo_id:todo_id, board_id:board_id}, (data, status)=>{
         console.log(data);
@@ -81,7 +83,7 @@ function add_column(column_id, title="New Column"){
         col_title.classList.add("col_input_disabled");
 
         // send text editing
-        popup_msg("Updating Note", "warning", 5);
+        // popup_msg("Updating Note", "warning", 5);
 
         $.post("server/todo.php", {task_type:"update_column_title", column_id:column_id, new_text:col_title.value}, (data, status)=>{
             console.log(data);
@@ -107,7 +109,7 @@ function add_column(column_id, title="New Column"){
         new_col.classList.add("disabled_dark")
 
         // send text editing
-        popup_msg("Updating Note", "warning", 5);
+        // popup_msg("Updating Note", "warning", 5);
 
         $.post("server/todo.php", {task_type:"delete_column", column_id:column_id}, (data, status)=>{
             console.log(data);
@@ -148,7 +150,7 @@ function add_column(column_id, title="New Column"){
     var add_note = document.createElement("div");
     add_note.className = "add_note_btn";
     add_note.onclick = ()=>{
-        create_node_clicked(add_note, column_id);
+        create_note_clicked(add_note, column_id);
     }
     new_col.appendChild(add_note);
 
@@ -166,7 +168,7 @@ function add_column(column_id, title="New Column"){
 }
 
 
-function create_node_clicked(btn, col_id){
+function create_note_clicked(btn, col_id){
     btn.classList.add("col_input_disabled");
     console.log("all col clicked")
 
@@ -176,7 +178,7 @@ function create_node_clicked(btn, col_id){
     var todo_id = todo_list_editor.getAttribute("todo_id");
     var board_id = todo_list_editor.getAttribute("board_id");
 
-    popup_msg("creating column", "warning", 5);
+    // popup_msg("Adding Note", "warning", 5);
 
     $.post("server/todo.php", {task_type:"create_note", col_id:col_id, todo_id:todo_id, board_id:board_id}, (data, status)=>{
         console.log(data);
@@ -186,7 +188,7 @@ function create_node_clicked(btn, col_id){
             popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
 
             if (json_response["msg_code"] == "note_created"){
-                create_note(json_response["new_note_id"], "New Note", dest_note_list, before_note=null);
+                create_note(json_response["new_note_id"], "New Note", dest_note_list, false, before_note=null);
                 save_note_order(dest_note_list);
             }
 
@@ -198,7 +200,7 @@ function create_node_clicked(btn, col_id){
     })
 }
 
-function create_note(note_id, note_text="New Note", note_list, before_note=null){
+function create_note(note_id, note_text="New Note", note_list, checked=false, before_note=null){
 
     var note = document.createElement("div");
     note.setAttribute("note_id", note_id);
@@ -224,10 +226,15 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
     var checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.className = "note_checkbox";
+    checkbox.checked = checked;
+    checkbox.onchange = ()=>{
+        note_check(checkbox)
+    }
     left_bar.appendChild(checkbox);
 
     var drag_bar = document.createElement("div");
     drag_bar.className = "note_drag_bar";
+    // drag_bar.innerHTML = "&#8801;"
     left_bar.appendChild(drag_bar);
 
 
@@ -251,7 +258,7 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
         var board_id = document.getElementById("todo_list_editor").getAttribute("board_id");
 
         // send text editing
-        popup_msg("Deleting Note", "warning", 5);
+        // popup_msg("Deleting Note", "warning", 5);
 
         $.post("server/todo.php", {task_type:"delete_note", note_id:note_id, board_id:board_id}, (data, status)=>{
             console.log(data);
@@ -286,7 +293,7 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
         textarea.classList.add("col_input_disabled");
 
         // send text editing
-        popup_msg("Updating Note", "warning", 5);
+        // popup_msg("Updating Note", "warning", 5);
 
         $.post("server/todo.php", {task_type:"update_note", note_id:note_id, new_text:textarea.value}, (data, status)=>{
             console.log(data);
@@ -303,6 +310,29 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
     }
     note.appendChild(textarea);
 
+
+    // Function to resize the textarea
+    const resizeTextarea = () => {
+        // Step 1: Reset height to auto to calculate new scrollHeight
+        textarea.style.height = 'auto';
+
+        // Step 2: Set height to scrollHeight (total content height)
+        // Add a small buffer (e.g., 2px) to prevent scrollbar flicker in some browsers
+        textarea.style.height = `${textarea.scrollHeight + 2}px`;
+    };
+
+    // Trigger resize on initial load (for pre-filled text)
+    resizeTextarea();
+
+    // Trigger resize on user input (typing, pasting, cutting)
+    textarea.addEventListener('input', resizeTextarea);
+
+    // Optional: Trigger resize on window resize (if container width changes)
+    window.addEventListener('resize', resizeTextarea);
+
+
+
+
     var add_between = document.createElement("div");
     add_between.className = "note_add_between";
     note.appendChild(add_between);
@@ -318,7 +348,7 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
         var todo_list_editor = document.getElementById("todo_list_editor")
         var board_id = todo_list_editor.getAttribute("board_id");
 
-        popup_msg("Adding Note", "warning", 5);
+        // popup_msg("Adding Note", "warning", 5);
 
         $.post("server/todo.php", {task_type:"create_note", col_id:column_id, board_id:board_id}, (data, status)=>{
             console.log(data);
@@ -328,7 +358,7 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
                 popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
 
                 if (json_response["msg_code"] == "note_created"){
-                    create_note(json_response["new_note_id"], "New Note", note_list, note);
+                    create_note(json_response["new_note_id"], "New Note", note_list, false, note);
                     save_note_order(note_list);
                 }
 
@@ -340,8 +370,6 @@ function create_note(note_id, note_text="New Note", note_list, before_note=null)
     
         })
 
-
-            // create_note(id, note_list, note);
     }
     add_between.appendChild(add_between_plus)
 
@@ -376,4 +404,54 @@ function save_note_order(note_list){
 
     });
 
+}
+
+
+
+
+function save_column_order(column_list_list){
+
+    var board_id = column_list_list.closest("#todo_list_editor").getAttribute("board_id");
+
+    var order_list = [];
+
+    for(var x = 0; x < column_list_list.children.length; x++){
+        var column = column_list_list.children[x];
+        order_list.push([x, column.getAttribute("column_id")]);
+    }
+    console.log(order_list);
+
+    $.post("server/todo.php", {task_type:"set_column_order", order:order_list, board_id:board_id}, (data, status)=>{
+        console.log(data);
+        try{
+
+            var json_response = JSON.parse(data);
+            popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
+
+        }catch(e){
+            popup_msg(e + "<br><br>" + data, "bad", 15);
+        }
+
+    });
+
+}
+
+
+
+function note_check(checkbox){
+    checkbox.classList.add("col_input_disabled");
+    var note_id = checkbox.closest(".note").getAttribute("note_id");
+    var board_id = checkbox.closest("#todo_list_editor").getAttribute("board_id");
+
+      $.post("server/todo.php", {task_type:"check_note", note_id:note_id, complete:checkbox.checked, board_id:board_id}, (data, status)=>{
+        console.log(data);
+        try{
+            var json_response = JSON.parse(data);
+            popup_msg(json_response["msg_text"], json_response["msg_type"], 5);
+        }catch(e){
+            popup_msg(e + "<br><br>" + data, "bad", 15);
+        }
+
+        checkbox.classList.remove("col_input_disabled");
+    })
 }

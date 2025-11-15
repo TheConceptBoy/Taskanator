@@ -8,15 +8,16 @@ function popup_msg(text, type = "good", delay=-1, dest_id=null){
     span_text.innerHTML = text;
     popup.appendChild(span_text);
 
-    var close_btn = document.createElement("div");
-    close_btn.className = 'popup_close';
-    close_btn.setAttribute("onClick", "popup_msg_close(this)");
-    popup.appendChild(close_btn);
+    // var close_btn = document.createElement("div");
+    // close_btn.className = 'popup_close';
+    // close_btn.setAttribute("onClick", "popup_msg_close(this)");
+    // popup.appendChild(close_btn);
 
     var close_icon = document.createElement("img");
     close_icon.className = "popup_close_icon"
     close_icon.src = "images/icons/close.png";
-    close_btn.appendChild(close_icon);
+    close_icon.setAttribute("onClick", "popup_msg_close(this)");
+    popup.appendChild(close_icon);
 
     
 

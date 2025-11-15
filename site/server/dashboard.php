@@ -62,7 +62,7 @@ if ( !isset($_POST["task_type"]) ){
             break;
 
         case "create_project":
-            $proj_title = $_POST["title"];
+            $proj_title = $_POST["project_title"];
 
             if($stmt = mysqli_prepare($conn, "INSERT INTO boards (board_name) VALUES (?)")){
                 mysqli_stmt_bind_param($stmt, "s", $proj_title);
@@ -83,6 +83,7 @@ if ( !isset($_POST["task_type"]) ){
                     $json_response -> msg_code = "project_made";
                     $json_response -> msg_type = "good";
                     $json_response -> new_project_id = $new_id;
+                    $json_response -> proj_title = $proj_title;
 
                 }else{
                     $json_response -> msg_text = "Project Creation Failed";

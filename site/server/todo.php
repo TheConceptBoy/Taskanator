@@ -44,15 +44,16 @@ if ( !isset($_POST["task_type"]) ){
                     $c_info["col_title"] = $col_title;
 
                     // load notes for each column
-                    if ($stmt_note = mysqli_prepare($conn, "SELECT id, note_text FROM column_notes WHERE column_id = ? ORDER BY note_order ASC")){
+                    if ($stmt_note = mysqli_prepare($conn, "SELECT id, note_text, checked FROM notes WHERE column_id = ? ORDER BY note_order ASC")){
                         mysqli_stmt_bind_param($stmt_note, "i", $col_id);
                         mysqli_stmt_execute($stmt_note);
-                        mysqli_stmt_bind_result($stmt_note, $note_id, $note_text);
+                        mysqli_stmt_bind_result($stmt_note, $note_id, $note_text, $checked);
                         $notes = [];
                         while(mysqli_stmt_fetch($stmt_note)){
                             $note = [];
                             $note["note_id"] = $note_id;
                             $note["note_text"] = $note_text;
+                            $note["note_checked"] = $checked;
                             $notes[] = $note;
                         }
                         $c_info["notes"] = $notes;
@@ -119,7 +120,7 @@ if ( !isset($_POST["task_type"]) ){
 
             // CHECK BOARD AND COLUMN OWNERSHIP HERE!
 
-            if($stmt = mysqli_prepare($conn, "INSERT INTO column_notes (column_id, note_text) VALUES (?,'New Text')")){
+            if($stmt = mysqli_prepare($conn, "INSERT INTO notes (column_id, note_text) VALUES (?,'New Text')")){
                 mysqli_stmt_bind_param($stmt, "i", $col_id);
                 mysqli_stmt_execute($stmt);
                 if (mysqli_stmt_affected_rows($stmt) > 0){
@@ -173,7 +174,7 @@ if ( !isset($_POST["task_type"]) ){
             $note_id = $_POST["note_id"];
             $new_text = $_POST["new_text"];
 
-            if($stmt = mysqli_prepare($conn, "UPDATE column_notes SET note_text = ? WHERE id = ?")){
+            if($stmt = mysqli_prepare($conn, "UPDATE notes SET note_text = ? WHERE id = ?")){
                 mysqli_stmt_bind_param($stmt, "si", $new_text, $note_id);
                 mysqli_stmt_execute($stmt);
 
@@ -193,29 +194,35 @@ if ( !isset($_POST["task_type"]) ){
             }
 
             break;
+
         case "set_note_order":
             $note_order_list = $_POST["note_order"];
             $board_id = $_POST["board_id"];
 
-            if($stmt = mysqli_prepare($conn, "UPDATE column_notes SET note_order = ? WHERE id = ?")){
+            if($stmt = mysqli_prepare($conn, "UPDATE notes SET note_order = ? WHERE id = ?")){
                 
+                mysqli_stmt_bind_param($stmt, "ii", $note_order, $note_id);
+                $processed = 0;
                 foreach($note_order_list as $note){
                     $note_id = $note[1];
                     $note_order = $note[0];
-                    mysqli_stmt_bind_param($stmt, "ii", $note_order, $note_id);
-                    mysqli_stmt_execute($stmt);
+                    if (mysqli_stmt_execute($stmt)){
+                        $processed += 1;
+                    }
                 }
 
-                if (mysqli_stmt_affected_rows($stmt) > 0){
+                if ($processed > 0){
                     $json_response -> msg_text = "Note Order Updated";
                     $json_response -> msg_code = "note_order_updated";
                     $json_response -> msg_type = "good";
+                    $json_response -> num = $processed;
 
                 }else{
                     $json_response -> msg_text = "Note Order Update Failed";
                     $json_response -> msg_code = "note_order_update_fail";
                     $json_response -> msg_type = "bad";
                     $json_response -> error = mysqli_error($conn);
+                    $json_response -> num = $processed;
                     // $json_response -> data = [$note_id, $new_text];
                 }
                 mysqli_stmt_close($stmt);
@@ -223,6 +230,42 @@ if ( !isset($_POST["task_type"]) ){
             }
 
             break;
+
+
+        case "set_column_order":
+            $order_list = $_POST["order"];
+            $board_id = $_POST["board_id"];
+
+            if($stmt = mysqli_prepare($conn, "UPDATE columns SET column_order = ? WHERE columns.id = ?")){
+                
+                mysqli_stmt_bind_param($stmt, "ii", $order, $id);
+                $processed = 0;
+                foreach($order_list as $column){
+                    $id = $column[1];
+                    $order = $column[0];
+                    if (mysqli_stmt_execute($stmt)){ $processed += 1; }
+                }
+
+                if ($processed > 0){
+                    $json_response -> msg_text = "Column Order Updated";
+                    $json_response -> msg_code = "column_order_updated";
+                    $json_response -> msg_type = "good";
+                    $json_response -> num = $processed;
+
+                }else{
+                    $json_response -> msg_text = "Column Order Update Failed";
+                    $json_response -> msg_code = "column_order_update_fail";
+                    $json_response -> msg_type = "bad";
+                    $json_response -> error = mysqli_error($conn);
+                    $json_response -> num = $processed;
+                    // $json_response -> data = [$note_id, $new_text];
+                }
+                mysqli_stmt_close($stmt);
+                exit(json_encode($json_response));
+            }
+
+            break;
+
 
         case "update_column_title":
             $column_id = $_POST["column_id"];
@@ -282,7 +325,7 @@ if ( !isset($_POST["task_type"]) ){
             // check ownership HERE
 
             // get todo lists
-            if($stmt = mysqli_prepare($conn, "DELETE FROM column_notes WHERE id = ? ") ){
+            if($stmt = mysqli_prepare($conn, "DELETE FROM notes WHERE id = ? ") ){
                 mysqli_stmt_bind_param($stmt, "i", $note_id);
                 mysqli_stmt_execute($stmt);
                 if (mysqli_stmt_affected_rows($stmt) > 0){}
@@ -292,6 +335,35 @@ if ( !isset($_POST["task_type"]) ){
                 } else {
                     $json_response -> msg_text = "Failed to Delete Note";
                     $json_response -> msg_code = "failed_note_delete";
+                    $json_response -> msg_type = "bad";
+
+                }
+                mysqli_stmt_close($stmt);
+
+                exit(json_encode($json_response));
+            
+
+            break;
+
+                
+        case "check_note":
+            $note_id = $_POST["note_id"];
+            $complete = $_POST["complete"] == "true" ? 1 : 0;
+            $board_id = $_POST["board_id"];
+
+            // check ownership HERE
+
+            // get todo lists
+            if($stmt = mysqli_prepare($conn, "UPDATE notes SET checked = ? WHERE id = ? ") ){
+                mysqli_stmt_bind_param($stmt, "ii", $complete, $note_id);
+                mysqli_stmt_execute($stmt);
+                if (mysqli_stmt_affected_rows($stmt) > 0){}
+                    $json_response -> msg_text = "Note Updated";
+                    $json_response -> msg_code = "note_updated";
+                    $json_response -> msg_type = "good";
+                } else {
+                    $json_response -> msg_text = "Failed to Update Note";
+                    $json_response -> msg_code = "failed_update_note";
                     $json_response -> msg_type = "bad";
 
                 }

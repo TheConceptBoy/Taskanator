@@ -78,7 +78,7 @@
     </div>
 
 
-    <div id="todo_list_editor" style="display: noneZ;" class="todo_invisible" todo_id="22" board_id="35"> 
+    <div id="todo_list_editor" style="display: none;" class="todo_invisible" todo_id="22" board_id="35"> 
         <div class="dash_section_bar todo_top_bar">
             <div id="todo_editor_name">ToDo List Name</div>
             <input type="button" class="input_style input_button" value="close" onclick="close_todo_editor()">
@@ -89,14 +89,21 @@
                 <div class="todo_col_title">New Column Title</div>
             </div> -->
 
+            <!-- <img id="todo_list_editor_bg" src="images/backgrounds/todo_list.jpg" loading="eager"> -->
+
 
             <div id="todo_columns_list"></div>
             <div class="todo_add_col" onclick="add_column_clicked(this)">
                 <img src="images/icons/plus.png" class="todo_col_plus">
             </div>
 
+
+
         </div>
     </div>
+
+    <!-- ToDo list background pops in instead of fading in becase it only loads ToDo scren fades in. I Preload it here insteaad so it's already in the memory -->
+    <img src="images/backgrounds/todo_list.jpg" class="preload_img">
     
 </body>
 </html>

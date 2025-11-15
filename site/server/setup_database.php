@@ -115,8 +115,8 @@ if (isset($_POST["task"])){
             try {
                 $result = mysqli_query($conn, "CREATE TABLE columns (
                     id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    board_id INT(128),
-                    title VARCHAR(255),
+                    todo_id INT(128),
+                    title VARCHAR(255) DEFAULT 'New Column',
                     column_order INT(255),
                     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -126,21 +126,21 @@ if (isset($_POST["task"])){
                 $json_response->messages[] = "'columns' Table Failed to Create";
             }
 
-            // create columns table
-            $operation_count += 1;
-            try {
-                $result = mysqli_query($conn, "CREATE TABLE column_notes (
-                    id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                    column_id INT(128),
-                    note_text TEXT,
-                    note_order INT(255),
-                    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-                )");
-                $success_count += 1;
-            } catch(Exception $e){
-                $json_response->messages[] = "'columns' Table Failed to Create";
-            }
+            // // create columns table
+            // $operation_count += 1;
+            // try {
+            //     $result = mysqli_query($conn, "CREATE TABLE column_notes (
+            //         id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            //         column_id INT(128),
+            //         note_text TEXT,
+            //         note_order INT(255),
+            //         reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            //         update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            //     )");
+            //     $success_count += 1;
+            // } catch(Exception $e){
+            //     $json_response->messages[] = "'columns' Table Failed to Create";
+            // }
 
 
             // create graphs list table
@@ -181,11 +181,12 @@ if (isset($_POST["task"])){
                 $result = mysqli_query($conn, "CREATE TABLE notes (
                     id INT(255) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     column_id INT(128),
-                    title VARCHAR(255),
+                    title VARCHAR(255) DEFAULT 'New Note',
                     description VARCHAR(2048),
                     note_color VARCHAR(255),
                     note_text VARCHAR(255),
                     note_order INT(255),
+                    checked TINYINT(1) DEFAULT 0,
                     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )");
@@ -242,7 +243,7 @@ if (isset($_POST["task"])){
             $credentials["db_username"] = $username;
             $credentials["db_password"] = $password;
             $credentials["db_dbname"] = $dbname;
-            $file = fopen("../../credentials.json", "w");
+            $file = fopen($_SERVER['DOCUMENT_ROOT']."credentials.json", "w");
             fwrite($file, json_encode($credentials));
             fclose($file);
 

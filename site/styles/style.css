@@ -66,9 +66,9 @@
 }
 
 body{
-    margin: 0;
+    margin: auto;
     min-height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .nav{

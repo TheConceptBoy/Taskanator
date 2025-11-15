@@ -10,17 +10,25 @@
     z-index: 100;
     transform: scale(1);
     opacity: 1.0;
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
     box-shadow: 0px 5px 5px black;
     overflow-x: scroll;
     scroll-behavior: smooth;
 }
 
+#todo_list_editor_bg{
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+}
 
 .todo_invisible{
-    /* opacity: 0.0 !important;
+    opacity: 0.0 !important;
     transform: scale(0.95) !important;
-    pointer-events: none; */
+    pointer-events: none;
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
 }
 
 .top_right_absolute{
@@ -57,7 +65,7 @@
 .todo_column{
     background-color: rgb(126, 134, 139);
     border-radius: 10px;
-    min-width: 250px;
+    width: 200px;
     padding: 3px;
     /* min-height: 300px; */
     display: flex;
@@ -78,20 +86,22 @@
     font-family: 'WDXL Lubrifont SC';
     background-color: #48616b;
     border-radius: 5px;
-    padding: 5px;
+    padding: 0px 5px;
     transition: background-color 0.5s ease-out;
     color: white;
     font-size: 15px;
     /* box-shadow: 0px 3px 5px #364950; */
     cursor: text;
     border: none;
+    width: 100%;
+    box-sizing: border-box;
 }
 .todo_col_title:focus{
     background-color: #364950
 }
 
 .todo_col_close{
-    width: 25px;
+    width: 15px;
     opacity: 0.5;
     transition: opacity 0.25s ease-out, background-color 0.25s ease-out;
     cursor: pointer;
@@ -112,7 +122,7 @@
     display: flex;
     /* flex-direction: column; */
     transition: opacity 0.25s ease-out;
-    row-gap: 5px;
+    column-gap: 5px;
     position: absolute;
     top: 5px;
     right: 5px;
@@ -121,15 +131,22 @@
 }
 
 .note_checkbox{
-    width: 16px;
-    height: 16px;
-    background-color: #48616b;
+    /* width: 16px; */
+    height: 10px;
+    background-color: none;
     margin: 0px;
     cursor: pointer;
+    appearance: none;
+    border-radius: 5px;
+    border: 2px solid #48616b;
+}
+.note_checkbox:checked{
+    border: 2px solid rgb(67, 240, 182);
+    background-color: rgb(67, 240, 182);
 }
 
 .todo_col_close_float_right{
-    background-color: #48616b;
+    background-color: none;
     width: 16px;
     opacity: 0.5;
     cursor: pointer;
@@ -161,7 +178,7 @@
     height: 300px;
     background-color: rgba(80, 101, 107, 0.425);
     position: relative;
-    min-width: 100px;
+    min-width: 60px;
     box-shadow: 0px 5px 10px black;
     cursor: pointer;
     border-radius: 10px;
@@ -176,14 +193,14 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 64px;
+    width: 40px;
     transition: opacity 0.5s ease-out;
 }
 
 .note_list{
     display: flex;
     flex-direction: column;
-    row-gap: 6px;
+    row-gap: 3px;
     min-height: 5px;
 }
 
@@ -218,9 +235,19 @@
     /* flex-direction: column; */
     border-radius: 5px;
     padding: 3px 0px 3px 3px;
-
+    transition: background-color 0.5s ease-out;
     filter: brightness(1);
 }
+
+
+.note:has(.note_checkbox:checked){
+    background-color: rgb(20, 220, 153);
+}
+/* 
+.note:has(.note_checkbox:checked) .note_drag_bar{
+    background-color: rgb(23, 131, 95);
+} */
+
 
 .note_top_bar{
     display: grid;
@@ -232,26 +259,29 @@
 .note_textarea{
     font-family: 'WDXL Lubrifont SC';
     color: white;
-    resize: vertical;
+    resize: none;
     /* background-color: #465e68; */
     /* padding: 5px; */
     /* margin: 3px; */
     /* height: 100%; */
-    min-height: 70px;
+    min-height: 35px;
     background: none;
     padding: 0px;
     margin: 0px;
     border: none;
+    width: 100%;
 }
 
 .note_drag_bar{
-    background-color: #48616b;
-    /* min-height: 8px; */
+    background-color: #00000094;
+    transition: background-color 0.5s ease-out;
+    min-height: 8px;
     min-width: 5px;
     height: 100%;
-    /* border-radius: 0px 0px 10px; */
     border-radius: 5px;
     cursor: pointer;
+    font-size: 20px;
+    opacity: 0.4;
 }
 
 .col_drag_bar{
@@ -281,13 +311,15 @@
 
 .note_add_between{
     position: absolute;
-    top: -5px;
+    top: -3px;
     height: 0px;
     border: 2px dashed white;
-    width: 100%;
+    width: 50%;
     opacity: 0.0;
     transition: opacity 0.5s ease-out;
     /* margin: 0px 20px; */
+    left: 50%;
+    transform: translate(-50%);
 }
 .note_add_between:hover{
     opacity: 1.0;
@@ -317,4 +349,5 @@
     display: grid;
     row-gap: 3px;
     grid-template-rows: max-content auto;
+    width: 10px;
 }

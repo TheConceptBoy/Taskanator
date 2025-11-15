@@ -4,15 +4,27 @@ window.addEventListener("beforeunload", function (e) {
                             + 'If you leave before saving, your changes will be lost.';
 
     (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    
     return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+
+
+
+
 });
 
 
+function preload_image(im_url) {
+    let img = new Image();
+    img.src = im_url;
 
+}
 
 
 
 window.addEventListener("load", ()=>{
+
+    // load todo background
+    preload_image("images/backgrounds/todo_list.jpg");
 
     $.post("server/dashboard.php", {task_type:"get_projects"}, (data, status)=>{
         console.log(data);
@@ -102,7 +114,9 @@ function create_project(btn){
 
     popup_msg("creating project", "warning", 5);
 
-    $.post("server/dashboard.php", {task_type:"create_project", title:document.getElementById("new_project_title").value}, (data, status)=>{
+    console.log("creating project: ", project_title);
+
+    $.post("server/dashboard.php", {task_type:"create_project", project_title:project_title}, (data, status)=>{
 
         console.log(data);
 
@@ -389,7 +403,7 @@ function back_to_dashboard(){
     
     setTimeout(()=>{
         document.getElementById("boards_manager").classList.remove("dash_exit_left");
-    }, 5)
+    }, 15)
 
     setTimeout(()=>{
         document.getElementById("board_tools_panel").style.display = "none";
@@ -554,7 +568,9 @@ function open_todo_editor(todo_id, title, board_owner_id, btn){
 
     btn.classList.add("tabloid_input_disabled");
 
-    popup_msg("Fetching ToDo List", "warning", 5);
+    //popup_msg("Fetching ToDo List", "warning", 5);
+
+    clear_columns(); // located in todo.js to clear todo list. // send before request to give enough time
 
     $.post("server/todo.php", {task_type:"get_todo_content", todo_id:todo_id, board_id:board_owner_id}, (data, status)=>{
         console.log(data);

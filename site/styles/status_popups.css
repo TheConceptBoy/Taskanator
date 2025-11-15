@@ -1,11 +1,16 @@
 .status_popup{
     display: grid;
+    column-gap: 5px;
     grid-template-columns: auto max-content;
     background-color: lightgreen;
-    padding: 5px;
+    padding: 3px;
     border-radius: 5px;
     max-width: max-content;
     white-space: pre-wrap;
+}
+
+.status_popup span{
+    font-size: 10px;
 }
 
 #status_float_box{
@@ -28,7 +33,7 @@
 }
 
 .popup_close{
-    padding: 0px 15px;
+    /* padding: 0px 15px; */
     width: 10px;
     height: 10px;
     text-align: center;
@@ -37,14 +42,20 @@
     filter: invert();
 }
 
-.popup_close:hover .popup_close_icon{
+.popup_close_icon:hover{
     opacity: 1.0;
+    /* line-height: 10px; */
+ 
 }
 
 .popup_close_icon{
-    width: 100%;
+    opacity: 0.5;
+    width: 10px;
     opacity: 0.5;
     pointer-events: none;
+    filter: invert();
+    padding: 2px;
+    cursor: pointer;
 }
 
 .mini_status_box{

@@ -4,7 +4,12 @@ body{
 }
 
 
-
+.preload_img{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 1px;
+}
 
 .dash_section_bar{
     background-image: linear-gradient(90deg, rgb(26, 37, 37), rgb(44, 63, 63));
